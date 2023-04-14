@@ -1,0 +1,46 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load the diabetes dataset
+df = pd.read_csv('diabetes.csv')
+
+# Extract the BloodPressure variable
+bp = df['BloodPressure']
+
+# Population statistics
+pop_mean, pop_std, pop_pct = np.mean(bp), np.std(bp), np.percentile(bp, 95)
+
+# Bootstrap sampling
+np.random.seed(123)
+bootstrap_means, bootstrap_stds, bootstrap_pcts = [], [], []
+for i in range(500):
+    bootstrap_sample = np.random.choice(bp, size=150, replace=True)
+    bootstrap_means.append(np.mean(bootstrap_sample))
+    bootstrap_stds.append(np.std(bootstrap_sample))
+    bootstrap_pcts.append(np.percentile(bootstrap_sample, 95))
+
+# Plot the distributions
+fig, axs = plt.subplots(3, figsize=(8, 12))
+for ax, data, title, xlabel, color, label in zip(
+    axs,
+    [bp, bootstrap_means, bootstrap_stds],
+    ['Population Distribution', 'Bootstrap Mean Distribution', 'Bootstrap Standard Deviation Distribution'],
+    ['BloodPressure', 'Bootstrap Mean', 'Bootstrap Standard Deviation'],
+    ['blue', 'orange', 'green'],
+    ['Population Mean', 'Bootstrap Mean', 'Bootstrap Standard Deviation']
+):
+    ax.hist(data, bins=20, alpha=0.5, color=color)
+    ax.set_title(title)
+    ax.axvline(np.mean(data), color='red', label=label)
+    ax.legend()
+    ax.set_xlabel(xlabel)
+plt.show()
+
+# Print the statistics
+print(f'Population Mean: {pop_mean:.2f}')
+print(f'Bootstrap Mean: {np.mean(bootstrap_means):.2f}')
+print(f'Population Standard Deviation: {pop_std:.2f}')
+print(f'Bootstrap Standard Deviation: {np.mean(bootstrap_stds):.2f}')
+print(f'Population 95th Percentile: {pop_pct:.2f}')
+print(f'Bootstrap 95th Percentile: {np.mean(bootstrap_pcts):.2f}')
