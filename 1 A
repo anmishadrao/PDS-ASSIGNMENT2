@@ -1,0 +1,59 @@
+import pandas as pd
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+
+# load data
+data = pd.read_csv("diabetes.csv")
+
+# set seed for reproducibility
+np.random.seed(123)
+
+# take random sample of 25 observations
+sample = data.sample(25)
+
+# calculate mean and maximum glucose levels for the sample
+sample_mean_glucose = sample['Glucose'].mean()
+sample_max_glucose = sample['Glucose'].max()
+
+# calculate population mean and maximum glucose levels
+population_mean_glucose = data['Glucose'].mean()
+population_max_glucose = data['Glucose'].max()
+
+plt.figure(figsize=(12, 5))
+
+# create subplots
+ax1 = plt.subplot(121)
+ax2 = plt.subplot(122)
+
+# plot means
+ax1.bar(['Sample Mean', 'Population Mean'], [sample_mean_glucose, population_mean_glucose])
+ax1.set_title('Comparison of Sample and Population Means')
+
+# plot highest values
+ax2.bar(['Sample Highest', 'Population Highest'], [sample_max_glucose, population_max_glucose])
+ax2.set_title('Comparison of Sample and Population Highest Values')
+
+# show the plot
+plt.show()
+[10:53 PM, 4/13/2023] Potu: 1a
+[10:53 PM, 4/13/2023] Potu: import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# load the data
+data = pd.read_csv("diabetes.csv")
+
+# set seed and take a random sample of 25 observations
+np.random.seed(123)
+sample_data = data.sample(n=25)
+
+# calculate 98th percentile of BMI for sample and population
+sample_bmi_98 = np.quantile(sample_data["BMI"], 0.98)
+pop_bmi_98 = np.quantile(data["BMI"], 0.98)
+
+# create histograms to compare the distribution of BMI in sample and population
+fig, axs = plt.subplots(figsize=(8, 5))
+axs.bar(['Sample 98th Percentile', 'Population 98th Percentile'], [sample_bmi_98, pop_bmi_98])
+axs.set_title('Comparison of Sample and Population 98th Percentiles of BMI')
+plt.show()
